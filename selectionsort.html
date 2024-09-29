@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selection Sort Demo</title>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.21.7/dist/css/uikit.min.css" />
+</head>
+<body>
+    <section class="uk-section uk-section-default uk-padding">
+        <container class="uk-container uk-container-expand">
+            <div class="uk-text-center" uk-grid>
+                <div class="uk-width-1-1">
+                    <h1 class="uk-heading-medium">Selection Sort</h1>
+                </div>
+            </div>
+        </container>
+    </section>
+
+    <section class="uk-section uk-section-default uk-padding-remove">
+        <container class="uk-container uk-container-expand">
+            <div class="uk-text-center" uk-grid>
+                <div class="uk-width-1-1">
+                    <button class="uk-button uk-button-primary" id="generateBtn">Generate Array</button>
+                    <button class="uk-button uk-button-secondary" id="iterateBtn" value="selection">Iterate Sort</button>
+                </div>
+            </div>
+        </container>
+    </section>
+
+    <section class="uk-section uk-section-default uk-padding">
+        <container class="uk-container uk-container-expand">
+            <div class="uk-text-center" uk-grid>
+                <div class="uk-width-1-1">
+                    <div class="uk-card uk-card-primary uk-card-body">
+                        <h3 class="uk-card-title">Initial Array</h3>
+                        <p id="vals"></p>
+                    </div>
+                </div>
+            </div>
+        </container>
+
+        <container class="uk-container uk-container-expand uk-margin">
+            <div class="uk-text-center" uk-grid>
+                <div class="uk-width-1-1">
+                    <div class="uk-card uk-card-secondary uk-card-body">
+                        <h3 id="numiterations" class="uk-card-title">Iterations of Sort</h3>
+                        <p id="iterations"></p>
+                    </div>  
+                </div>
+            </div>
+
+        </container>
+    </section>
+
+
+    <script type="module">
+        import { registerEventHandlers } from './functions/utils.js';
+        registerEventHandlers();
+    </script>
+
+     <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.7/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.7/dist/js/uikit-icons.min.js"></script>
+</body>
+</html>
