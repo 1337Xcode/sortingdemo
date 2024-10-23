@@ -1,16 +1,17 @@
 :root {
-    --primary: #aaa;
-    --secondary: #777;
-    --dark: #333;
-    --sorted: #0053ACFF;
-    --unsorted: #DD53AC;
-    --pivot: #DDFF55;
-    --minimum: #55BB55;
-    --position: #5555DD;
-    --scanner: #DD8888;
-    --target: #55CC55;
-    --deleted: #CC5555;
+    --primary: #333;
+    --secondary: #eee;
+    --dark: #fff;
+    --sorted: #007BFF;
+    --unsorted: #FF8AC7;
+    --pivot: #FFFF99;
+    --minimum: #88CC88;
+    --position: #8888FF;
+    --scanner: #FFAAAA;
+    --target: #88DD88;
+    --deleted: #FF6666;
 }
+
 .cursor-pointer {
     cursor: pointer;
 }
