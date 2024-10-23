@@ -1,17 +1,16 @@
 :root {
-    --primary: #333;
-    --secondary: #eee;
-    --dark: #fff;
-    --sorted: #007BFF;
-    --unsorted: #FF8AC7;
-    --pivot: #FFFF99;
-    --minimum: #88CC88;
-    --position: #8888FF;
-    --scanner: #FFAAAA;
-    --target: #88DD88;
-    --deleted: #FF6666;
+    --primary: #DDE7F2;
+    --secondary: #A0B0C0;
+    --dark: #111111;
+    --sorted: #87CEEB;
+    --unsorted: #CC559C;
+    --pivot: #FFD580;
+    --minimum: #90EE90;
+    --position: #555DB0;
+    --scanner: #D07070;
+    --target: #98FB98;
+    --deleted: #CC4444;
 }
-
 .cursor-pointer {
     cursor: pointer;
 }
