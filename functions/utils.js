@@ -1,226 +1,226 @@
-
-import { captureBubbleSort } from "./bubblesort.js";
-import { captureSelectionSort } from "./selectionsort.js";
-import { captureInsertionSort } from "./insertionsort.js";
-import { captureQuickSort, clearPartitionObjArray, getPartitionObjArray } from "./quicksort.js";
-
-
-let randomArr = [];
-let sortedArr = [];
-
-// Generate array of random (size) integers between min (inclusive) and max (inclusive)
-function generateRandomArray(size = 10, min = 1, max = 100) {
-    console.log('Size = ' + size);
-    let arr = [];
-    while (arr.length < size) {
-        let randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
-        if (!arr.includes(randomInt)) {
-            arr.push(randomInt);
-        }
+function generateArray(length = 5) {
+    let array = []
+    for (let i=0; i<length; i++) {
+        array.push(randomNumber(5, 500))
     }
-    return arr;
+    return array
 }
 
-
-// Display the array in HTML element with ID name
-function displayArray(arr, name) {
-    console.log('Array for Display', arr);
-    var element = document.getElementById(`${name}`);
-    element.innerText = arr.join(', ');
+function switchElement (array, index1, index2) {
+    let temp = array[index1]
+    array[index1] = array[index2]
+    array[index2] = temp
 }
 
-
-// Display number of iterations in HTML element with ID name
-function displayNumIterations(num, name) {
-    const parent = document.getElementById(`${name}`);
-    const newTitle = `${num} Iterations of Sort`;
-    parent.innerHTML = newTitle;
-}
-
-
-// Display single iteration in HTML element with ID name
-function displayIteration(obj, name) {
-    const parent = document.getElementById(`${name}`);
-    const newIter = document.createElement('p');
-    newIter.classList.add('single-iteration');
-    newIter.innerHTML = `${obj.array.join(', ')} (${obj.swaps} swaps)`;
-    parent.appendChild(newIter);
-}
-
-// Clear display of all iterations of sort and reset title
-function clearIterations() {
-    const title = document.getElementById('numiterations');
-    if (title) {
-        const newTitle = `Iterations of Sort`;
-        title.innerHTML = newTitle;
-    
-        const parent = document.getElementById('iterations');
-        const element = parent.querySelectorAll('.single-iteration');
-        [...element].forEach((iteration) => {
-            iteration.remove();
-        });
-    } else { // Special case for quicksort partitions
-
-        clearPartitionObjArray();
-
-        const title = document.getElementById('numpartitions');
-        const newTitle = `Partitions`;
-        title.innerHTML = newTitle;
-
-        const parent = document.getElementById('partitions');
-        const element = parent.querySelectorAll('.single-partition');
-        [...element].forEach((iteration) => {
-            iteration.remove();
-        });
-
-        const sortedTitleParent = document.getElementById('sortedarraytitle');
-        if (sortedTitleParent) {
-            sortedTitleParent.innerHTML = '';
+function shiftElement (array, index1, index2) {
+    if (index2>index1){
+        let temp = array[index2]
+        for (let i = index2; i > index1; i--) {
+            array[i] = array[i - 1]
         }
-
-        const sortedArrayParent = document.getElementById('sortedarray');
-        if (sortedArrayParent) {
-            sortedArrayParent.innerHTML = '';
+        array[index1] = temp
+    }
+    else if(index1>index2+1) {
+        let temp = array[index1]
+        for (let i = index1; i > index2; i--) {
+            array[i] = array[i - 1]
         }
+        array[index2] = temp
     }
 }
 
-// Display the number of partitions
-function displayNumPartitions(num) {
-    const parent = document.getElementById('numpartitions');
-    const newTitle = `${num} Partitions Used`;
-    parent.innerHTML = newTitle;
+Array.prototype.equals = function(arr2) {
+    return (
+        this.length === arr2.length &&
+        this.every((value, index) => value === arr2[index])
+    )
 }
 
-// Display the partitions used during quicksort
-function displayPartitions(partitionObj) {
-
-    const elementArr = [];
-
-    // Create an array of HTML elements
-    partitionObj.forEach((obj) => {
-
-        const partitionArr = obj.partition;
-        const partitionLength = partitionArr.length;
-        const pivotVal = obj.pivot;
-        const level = obj.level;
-
-        const details = document.createElement('p');
-        details.classList.add('single-partition');
-
-        if (partitionLength > 1) {
-            const tempArr = partitionArr.slice(0, partitionArr.length-1);
-            details.innerHTML = `[ ${tempArr.join(', ')}, <span style="color:red">${pivotVal}</span> ]`;
-        } else {
-            details.innerHTML = `[ ${pivotVal} ]`;
+const randomNumber = (min, max, except=null) => {
+    let number = Math.round(min+Math.random()*max)
+    if (except) {
+        while (number===except){
+            number = Math.round(min+Math.random()*max)
         }
-
-        if (elementArr[level-1]) {
-            const currElement = elementArr[level-1];
-            details.innerHTML = currElement.innerHTML + `<span style="padding-right: 20px"></span>` + details.innerHTML;
-            elementArr[level-1] = details;
-        } else {
-            elementArr[level-1] = details;
-        }
-    });
-
-    console.log(elementArr);
-
-    // Use the DOM to display each element from the elements array
-    elementArr.forEach((element) => {
-        const parent = document.getElementById('partitions');
-        parent.appendChild(element);
-    });
+    }
+    return number;
 }
 
-// Display the sorted array from quicksort
-function displayQuicksortArray(sorted) {
-    const parent = document.getElementById('sortedarraytitle');
-    const newTitle = `Sorted Array`;
-    parent.innerHTML = newTitle;
-
-    const arrayParent = document.getElementById('sortedarray');
-    const newParagraph = `${sorted.join(', ')}`;
-    arrayParent.innerHTML = newParagraph;
+const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
-// Register the event handlers
-function registerEventHandlers() {
-    const genBtn = document.getElementById("generateBtn");
-    console.log(`${genBtn.id} event listener added`);
-    genBtn.addEventListener('click', () => {
-        randomArr = generateRandomArray(10); 
-        displayArray(randomArr, 'vals');
-        clearIterations();
-
-        // Enable the iteration button
-        const element = document.getElementById('iterateBtn');
-        element.disabled = false;
-
-    });
-
-    const iterBtn = document.getElementById("iterateBtn");
-    console.log(`${iterBtn.id} event listener added`);
-    iterBtn.addEventListener('click', () => {
-
-        // Get the value from the button to determine sort to use
-        const element = document.getElementById('iterateBtn');
-
-        // Disable the iterate button
-        element.disabled = true;
-
-        const value = element.getAttribute('value');
-        console.log(`Sort requested is ${value} sort!`);
-        if (value === 'bubble') {
-            sortedArr = captureBubbleSort(randomArr); 
-        } else if (value === 'selection') {
-            sortedArr = captureSelectionSort(randomArr); 
-        } else if (value === 'insertion') {
-            sortedArr = captureInsertionSort(randomArr); 
-        } else if (value === 'quick') {
-            sortedArr = captureQuickSort(randomArr);
-        }
-
-        // Display the title with the number of iterations (except quicksort)
-        if (value !== 'quick') {
-
-            const numIterations = sortedArr.length;
-            displayNumIterations(numIterations, 'numiterations');
-            
-            // Display each iteration of the sort
-            sortedArr.forEach((iteration) => {
-                displayIteration(iteration, 'iterations');
-            });
-
-        } else {
-
-            // Special case for quicksort (to display the partitons)
-
-            const partitionObjArr = getPartitionObjArray();
-            console.log(partitionObjArr);
-            const numPartitions = partitionObjArr.length;
-            displayNumPartitions(numPartitions);
-
-            // Display each partition and corresponding pivot 
-           displayPartitions(partitionObjArr);
-
-           // Display the sorted array
-           displayQuicksortArray(sortedArr);
-
-        }
-    });
+function getOffset(el) {
+    const rect = el.getBoundingClientRect();
+    return {
+        left: rect.left + window.scrollX,
+        top: rect.top + window.scrollY
+    };
 }
 
-// Self-invoking function for initialisation
-(function init() {
-    console.log("init called");
-    randomArr = generateRandomArray();
-    displayArray(randomArr, 'vals');
-})();
+let barVisualizer = {
+    quickSort: async animation => {
+        let sleepTime = SEARCH_TIME/(animation.length)
+        for (let set of animation) {
+            let nodes = barVisualizer.getNodes(set)
+            nodes.map((node, index) => {
+                if (index===0) node.classList.add('node-pivot')
+                else node.classList.add(set.sorted ? 'node-sorted' : 'node-unsorted')
+            })
+            await sleep(sleepTime)
+            if (!set.sorted) {
+                let newNodes = [];
+                newNodes.push({index: set.indices[0], className: 'node-pivot'})
+                newNodes.push({index: set.indices[1], className: 'node-unsorted'})
+                if (set.indices.length>2) {
+                    newNodes.push({index: set.indices[2], className: 'node-unsorted'})
+                    await barVisualizer.animateSwitch([{index: set.indices[1]}, {index: set.indices[2]}])
+                    switchElement(array, set.indices[1], set.indices[2])
+                    plotGraph(newNodes)
+                }
+                else {
+                    let temp = newNodes[0].className
+                    newNodes[0].className = newNodes[1].className
+                    newNodes[1].className = temp
+                    await barVisualizer.animateSwitch([{index: set.indices[1]}, {index: set.indices[0]}])
+                    switchElement(array, set.indices[1], set.indices[0])
+                    plotGraph(newNodes)
+                }
+                await sleep(sleepTime/2)
+                set.indices.map(index => {
+                    let node = document.querySelector('#graph_body').querySelector(`#node_${index}`)
+                    node.classList.remove('node-unsorted', 'node-pivot')
+                })
+                await sleep(sleepTime/2)
+            } else {
+                nodes.map((node) => node.classList.remove('node-sorted', 'node-pivot'))
+            }
+        }
+    },
 
-// Export registerEventHandlers
-export { registerEventHandlers };
+    bubbleSort: async animation => {
+        let sleepTime = SEARCH_TIME/(animation.length)
+        for (let set of animation) {
+            let nodes = barVisualizer.getNodes(set)
+            nodes.map((node, index) => node.classList.add(set.sorted ? 'node-sorted' : 'node-unsorted'))
+            await sleep(sleepTime)
+            if (!set.sorted) {
+                let newNodes = [];
+                newNodes.push({index: set.indices[0], className: 'node-unsorted'})
+                newNodes.push({index: set.indices[1], className: 'node-unsorted'})
+                await barVisualizer.animateSwitch(newNodes, sleepTime/2)
+                switchElement(array, set.indices[0], set.indices[1])
+                plotGraph(newNodes)
+                await sleep(sleepTime/2)
+                newNodes.map(nodeIndex => {
+                    let node = document.querySelector('#graph_body').querySelector(`#node_${nodeIndex.index}`)
+                    node.classList.remove('node-unsorted')
+                })
+                await sleep(sleepTime/2)
+            } else {
+                nodes.map((node) => node.classList.remove('node-sorted'))
+            }
+        }
+    },
 
+    selectionSort: async animation => {
+        let sleepTime = SEARCH_TIME/(animation.length*2)
+        for (let set of animation) {
+            let nodes = barVisualizer.getNodes(set)
+            nodes[0].classList.add(set.sorted ? 'node-sorted' : 'node-position')
+            nodes[1].classList.add(set.sorted ? 'node-sorted' : 'node-minimum')
+            await sleep(sleepTime)
+            if (!set.sorted) {
+                let newNodes = [];
+                newNodes.push({index: set.indices[0], className: 'node-minimum'})
+                newNodes.push({index: set.indices[1], className: 'node-position'})
+                await barVisualizer.animateSwitch(newNodes, sleepTime/2)
+                switchElement(array, set.indices[0], set.indices[1])
+                plotGraph(newNodes)
+                await sleep(sleepTime/2)
+                newNodes.map(nodeIndex => {
+                    let node = document.querySelector('#graph_body').querySelector(`#node_${nodeIndex.index}`)
+                    node.classList.remove('node-position', 'node-minimum')
+                })
+                await sleep(sleepTime/2)
+            } else {
+                nodes.map((node) => node.classList.remove('node-sorted'))
+            }
+        }
+    },
 
+    insertionSort: async animation => {
+        let sleepTime = SEARCH_TIME/(animation.length*2)
+        for (let set of animation) {
+            let nodes = barVisualizer.getNodes(set)
+            nodes[0].classList.add(set.sorted ? 'node-sorted' : 'node-position')
+            nodes[1].classList.add(set.sorted ? 'node-sorted' : 'node-scanner')
+            await sleep(sleepTime)
+            if (!set.sorted) {
+                let newNodes = [];
+                newNodes.push({index: set.indices[0], className: 'node-scanner'})
+                newNodes.push({index: set.indices[1], className: 'node-position'})
+                await barVisualizer.animateShift(newNodes, sleepTime)
+                newNodes.pop()
+                newNodes.push({index: set.indices[0]+1, className: 'node-position'})
+                shiftElement(array, set.indices[0], set.indices[1])
+                plotGraph(newNodes)
+                await sleep(sleepTime/2)
+                newNodes.map(nodeIndex => {
+                    let node = document.querySelector('#graph_body').querySelector(`#node_${nodeIndex.index}`)
+                    node.classList.remove('node-position', 'node-scanner')
+                })
+                await sleep(sleepTime/2)
+            } else {
+                nodes.map((node) => node.classList.remove('node-sorted'))
+            }
+        }
+    },
 
+    animateSwitch: async (unsortedNodes, sleepTime) => {
+        sleepTime = sleepTime>150 ? sleepTime : 150
+        let switchingNodes = [
+            document.querySelector('#graph_body').querySelector(`#node_${unsortedNodes[0].index}`),
+            document.querySelector('#graph_body').querySelector(`#node_${unsortedNodes[1].index}`)
+        ]
+        let nodePositions = [getOffset(switchingNodes[0]), getOffset(switchingNodes[1])]
+        let topMovement = nodePositions[1].top-nodePositions[0].top
+        let leftMovement = nodePositions[1].left-nodePositions[0].left
+        switchingNodes[0].style.transition = (sleepTime*0.8)+"ms"
+        switchingNodes[0].style.transform = "translate("+(leftMovement)+"px, 0)"
+        switchingNodes[1].style.transition = (sleepTime*0.8)+"ms"
+        switchingNodes[1].style.transform = "translate("+(-leftMovement)+"px, 0)"
+        await sleep(sleepTime)
+    },
 
+    animateShift: async (unsortedNodes, sleepTime) => {
+        sleepTime = sleepTime>100 ? sleepTime : 100
+        let shiftedNodes = [
+            document.querySelector('#graph_body').querySelector(`#node_${unsortedNodes[0].index}`),
+            document.querySelector('#graph_body').querySelector(`#node_${unsortedNodes[1].index}`)
+        ]
+        let nodePositions = [getOffset(shiftedNodes[0]), getOffset(shiftedNodes[1])]
+        let topMovement = nodePositions[1].top-nodePositions[0].top
+        let leftMovement = nodePositions[1].left-nodePositions[0].left
+        shiftedNodes[1].style.transition = (sleepTime*0.8)+"ms"
+        shiftedNodes[1].style.transform = "translate("+(-leftMovement)+"px,"+(-topMovement)+"px)"
+
+        let shiftedNodeCounts = unsortedNodes[1].index - unsortedNodes[0].index
+        for (let index = unsortedNodes[0].index; index<unsortedNodes[1].index; index++) {
+            let node = document.querySelector('#graph_body').querySelector(`#node_${index}`)
+            node.style.transition = (sleepTime*0.8)+"ms"
+            node.style.transform = "translate("+(leftMovement/shiftedNodeCounts)+"px, 0)"
+        }
+        await sleep(sleepTime)
+    },
+
+    getNodes: set => {
+        let nodes = []
+        set.indices.map( index => {
+            nodes.push(document
+                .querySelector('#graph_body')
+                .querySelector(`#node_${index}`))
+        })
+        return nodes
+    }
+}
