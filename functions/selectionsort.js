@@ -1,67 +1,22 @@
-
-// Selection Sort
-function selectionSort(arr) {
-    
-    let n = arr.length;
-        
-    for (let i = 0; i < n - 1; i++) {
-
-        let minIndex = i;
-        for (let j = i + 1; j < n; j++) {
-            if (arr[j] < arr[minIndex]) {
-                minIndex = j;
+let selectionSort = {
+    sort: (input, animation) => {
+        let j=0
+        for (let i=0; i<input.length; i++) {
+            j = i
+            let minIndex = j
+            let min = input[j]
+            while (j<input.length) {
+                if (input[j]<min) {
+                    min = input[j]
+                    minIndex = j
+                }
+                j++
             }
+            if (i!==minIndex) animation.push({indices:[i, minIndex], sorted: false})
+            min = input[minIndex]
+            input[minIndex] = input[i]
+            input[i] = min
         }
-
-        if (minIndex !== i) {
-            let temp = arr[i];
-            arr[i] = arr[minIndex];
-            arr[minIndex] = temp;
-        }
+        return input
     }
-
-    return arr;
 }
-
-// Modified selection sort to place each iteration and details within a JavaScript object
-function captureSelectionSort(arr) {
-    
-    let n = arr.length;
-    let iterArr = [];
-    let numIterations = 0;
-    let numSwaps = 0;
-    let numComparisons = 0;
-        
-    for (let i = 0; i < n - 1; i++) {
-        numIterations++;
-        numComparisons = 0;
-        numSwaps = 0;
-
-        let minIndex = i;
-        for (let j = i + 1; j < n; j++) {
-            numComparisons++;
-            if (arr[j] < arr[minIndex]) {
-                minIndex = j;
-            }
-        }
-
-        if (minIndex !== i) {
-            let temp = arr[i];
-            arr[i] = arr[minIndex];
-            arr[minIndex] = temp;
-            numSwaps++;
-        }
-
-        // Push copy of current array to iterations array object
-        const iterArrObj = {};
-        iterArrObj.iteration = numIterations;
-        iterArrObj.comparisons = numComparisons;
-        iterArrObj.swaps = numSwaps;
-        iterArrObj.array = [...arr];
-        iterArr.push(iterArrObj);
-    }
-
-    return iterArr;
-}
-
-export { selectionSort, captureSelectionSort };
